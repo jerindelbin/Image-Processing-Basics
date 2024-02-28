@@ -99,13 +99,14 @@ int main()
     int r = img.rows;
     int c = img.cols; 
     cout <<"Rows:"<<r<<"\nColumns:"<<c<<endl;
-    
+    */
+
 
     //getting color channels 
     cout << "Channel count" << img.channels()<<endl;
     cout << "Element size" << img.elemSize()<<endl;
     cout << "Bytes per channel=" << img.elemSize() / img.channels()<<endl;
-    */
+    
 
     /*displaying the image
     cv::namedWindow("Scenery Image", WINDOW_FULLSCREEN); //creating window for image with name Scenery Image
