@@ -40,6 +40,12 @@ int gaussfilter(cv::Mat& img, cv::Mat& dst)
 
     }
     return 0;
+
+//=================================================================================================================================
+//=================================================================================================================================
+
+
+
 }
 //=================================================================================================================================
 //=================================================================================================================================
@@ -60,15 +66,31 @@ int main()
 
    
     //reading the image
-    cv::Mat img = imread("C:/Users/Jerin/Desktop/Pictures/Eagle.jpg"); 
-    cv::namedWindow("Test iamge", WINDOW_AUTOSIZE);
-    cv::imshow("Test image", img);
+    ///////cv::Mat img = imread("C:/Users/Jerin/Desktop/Pictures/Eagle.jpg"); 
+    ///////cv::namedWindow("Test iamge", WINDOW_AUTOSIZE);
+    ///////cv::imshow("Test image", img);
     //cv::waitKey(10);
     //cv::destroyWindow("Test image");
 
+    cv::VideoCapture capture(0);
+    cv::namedWindow("Original feed",WINDOW_AUTOSIZE);
+    cv::Mat frame;
+    while (cv::waitKey(10)!='q')
+    {
+        capture >> frame;
+        cv::imshow("Original feed", frame);
+        //cv::waitKey(30);
+        //cv::destroyWindow("Original feed");
+    }
+
+
+
+
+
+
 
     //creating a destination image to apply filter
-    cv::Mat dst;
+    /*cv::Mat dst;
     dst.create(img.size(), img.type());
     img.copyTo(dst);
 
@@ -103,7 +125,7 @@ int main()
 
 
     //getting color channels 
-    cout << "Channel count" << img.channels()<<endl;
+    /*cout << "Channel count" << img.channels() << endl;
     cout << "Element size" << img.elemSize()<<endl;
     cout << "Bytes per channel=" << img.elemSize() / img.channels()<<endl;
     
