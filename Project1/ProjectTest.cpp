@@ -14,7 +14,7 @@ using namespace std;
 
 int gaussfilter(cv::Mat& img, cv::Mat& dst)
 {
-    
+
     for (int i = 1; i < img.rows - 1; i++)
     {
         for (int j = 1; j < img.cols - 1; j++)
@@ -39,14 +39,71 @@ int gaussfilter(cv::Mat& img, cv::Mat& dst)
         }
 
     }
+    cv::namedWindow("blur image", WINDOW_AUTOSIZE);
+    cv::imshow("blur image", dst);
+    cv::waitKey(0);
     return 0;
-
-//=================================================================================================================================
-//=================================================================================================================================
-
-
-
 }
+    
+
+
+void greyscale_filter(cv::Mat& img, cv::Mat& dst)
+{
+    int channels = img.channels();
+    {
+        {
+            for (int i = 0; i < img.rows; i++)
+            {
+                for (int j = 0; j < img.cols; j++)
+                {
+                    uchar res = 0;
+                    int b = img.at<cv::Vec3b>(i, j)[0];
+                    int g = img.at<cv::Vec3b>(i, j)[1];
+                    int r = img.at<cv::Vec3b>(i, j)[2];
+                    res = (b + g + r) / channels;    
+                    dst.at<cv::Vec3b>(i, j)[0] = res;
+                    dst.at<cv::Vec3b>(i, j)[1] = res;
+                    dst.at<cv::Vec3b>(i, j)[2] = res;
+                }
+            }
+            cv::namedWindow("greyscale image", WINDOW_AUTOSIZE);
+            cv::imshow("greyscale image", dst);
+            cv::waitKey(0);
+        }
+    }
+}
+void sepia_filter(cv::Mat& img, cv::Mat& dst)
+{
+    for (int i = 0; i < img.rows; i++)
+    {
+        for (int j = 0; j < img.cols; j++)
+        {
+            int b = img.at<cv::Vec3b>(i,j)[0];
+            int g = img.at<cv::Vec3b>(i,j)[1];
+            int r = img.at<cv::Vec3b>(i,j)[2];
+            int sepia_b = (0.272 * r + 0.534 * g + 0.131 * b);
+            int sepia_g = (0.349 * r + 0.686 * g + 0.168 * b);
+            int sepia_r = (0.393 * r + 0.769 * g + 0.189 * b);
+
+            sepia_b = min(255, max(0, sepia_b));
+            sepia_g = min(255, max(0, sepia_g));
+            sepia_r = min(255, max(0, sepia_r));
+
+            dst.at<cv::Vec3b>(i, j) = cv::Vec3b(sepia_b, sepia_g, sepia_r);
+
+        }
+    }
+    cv::namedWindow("Sepia image", WINDOW_AUTOSIZE);
+    cv::imshow("Sepia image", dst);
+    cv::waitKey(0);
+}
+//=================================================================================================================================
+//=================================================================================================================================
+
+
+
+    //return 0;
+ 
 //=================================================================================================================================
 //=================================================================================================================================
 
@@ -66,12 +123,53 @@ int main()
 
    
     //reading the image
-    ///////cv::Mat img = imread("C:/Users/Jerin/Desktop/Pictures/Eagle.jpg"); 
-    ///////cv::namedWindow("Test iamge", WINDOW_AUTOSIZE);
-    ///////cv::imshow("Test image", img);
-    //cv::waitKey(10);
-    //cv::destroyWindow("Test image");
+    /*cv::Mat img = imread("C:/Users/Jerin/Desktop/Pictures/Eagle.jpg");
+    cv::namedWindow("Test iamge", WINDOW_AUTOSIZE);
+    cv::imshow("Test image", img);
+    cv::waitKey(0);
+    cv::destroyWindow("Test image");
+    cout << img.channels(); */
 
+    cv::Mat img = imread("C:/Users/Jerin/Desktop/Pictures/Eagle.jpg");
+    cv::namedWindow("Test image", WINDOW_AUTOSIZE);
+    cv::imshow("Test image", img);
+    cv::waitKey(0);
+
+    cv::Mat dst;
+    dst.create(img.size(), img.type());
+    img.copyTo(dst);
+    
+    //while (cv::waitKey(10) != 'q')
+    if (cv::waitKey(0) == 'g')
+        {
+            //cv::destroyWindow("Test image");
+            greyscale_filter(img, dst);
+
+        }
+    if (cv::waitKey(0) == 'b')
+        {
+            //cv::destroyWindow("Test image");
+            gaussfilter(img, dst);
+        }
+    if (cv::waitKey(0) == 's')
+        {
+        sepia_filter(img, dst);
+        }
+
+   
+    
+    
+
+   
+
+    //cv::destroyWindow("Test image");
+    
+ 
+   
+
+    
+
+    /*
     cv::VideoCapture capture(0);
     cv::namedWindow("Original feed",WINDOW_AUTOSIZE);
     cv::Mat frame;
@@ -82,7 +180,7 @@ int main()
         //cv::waitKey(30);
         //cv::destroyWindow("Original feed");
     }
-
+    */ // Video capture block
 
 
 
