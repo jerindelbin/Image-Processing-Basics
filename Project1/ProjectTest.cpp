@@ -72,6 +72,8 @@ void greyscale_filter(cv::Mat& img, cv::Mat& dst)
         }
     }
 }
+
+
 void sepia_filter(cv::Mat& img, cv::Mat& dst)
 {
     for (int i = 0; i < img.rows; i++)
@@ -96,6 +98,83 @@ void sepia_filter(cv::Mat& img, cv::Mat& dst)
     cv::namedWindow("Sepia image", WINDOW_AUTOSIZE);
     cv::imshow("Sepia image", dst);
     cv::waitKey(0);
+}
+
+//5x5 blur filter 
+    // 1 2 4 2 1
+    // 2 4 8 4 2 
+   // 4 8 16 8 4
+    // 2 4 8 4 2
+    // 1 2 4 2 1
+
+void fivexfive_blurfilter(cv::Mat & img, cv::Mat & dst)
+{
+    for (int i = 2; i < img.rows - 2; i++)
+    {
+        for (int j = 2; j < img.cols - 2; j++)
+        {
+            for (int k = 0; k < 3; k++)
+            {
+                int sum = img.at<cv::Vec3b>(i - 2, j - 2)[k]
+                    + 2 * img.at<cv::Vec3b>(i - 2, j - 1)[k]
+                    + 4 * img.at<cv::Vec3b>(i - 2, j)[k]
+                    + 2 * img.at<cv::Vec3b>(i - 2, j + 1)[k]
+                    + img.at<cv::Vec3b>(i - 2, j + 2)[k]
+
+                    + 2 * img.at<cv::Vec3b>(i - 1, j - 2)[k]
+                    + 4 * img.at<cv::Vec3b>(i - 1, j - 1)[k]
+                    + 8 * img.at<cv::Vec3b>(i - 1, j)[k]
+                    + 4 * img.at<cv::Vec3b>(i - 1, j + 1)[k]
+                    + 2 * img.at<cv::Vec3b>(i - 1, j + 2)[k]
+
+                    + 4 * img.at<cv::Vec3b>(i, j - 2)[k]
+                    + 8 * img.at<cv::Vec3b>(i, j - 1)[k]
+                    + 16 * img.at<cv::Vec3b>(i, j)[k]
+                    + 8 * img.at<cv::Vec3b>(i, j + 1)[k]
+                    + 4 * img.at<cv::Vec3b>(i, j + 2)[k]
+
+                    + 2 * img.at<cv::Vec3b>(i + 1, j - 2)[k]
+                    + 4 * img.at<cv::Vec3b>(i + 1, j - 1)[k]
+                    + 8 * img.at<cv::Vec3b>(i + 1, j)[k]
+                    + 4 * img.at<cv::Vec3b>(i + 1, j + 1)[k]
+                    + 2 * img.at<cv::Vec3b>(i + 1, j + 2)[k]
+
+                    + img.at<cv::Vec3b>(i + 2, j - 2)[k]
+                    + 2 * img.at<cv::Vec3b>(i + 2, j - 1)[k]
+                    + 4 * img.at<cv::Vec3b>(i + 2, j)[k]
+                    + 2 * img.at<cv::Vec3b>(i + 2, j + 1)[k]
+                    + img.at<cv::Vec3b>(i + 2, j + 2)[k];
+
+                sum /= 81;
+                dst.at<cv::Vec3b>(i, j)[k] = sum;
+
+            }
+        }
+    }
+    cv::namedWindow("5x5 blur image", WINDOW_AUTOSIZE);
+    cv::imshow("5x5 blur image", dst);
+    cv::waitKey(0);
+}
+
+
+//5x5 seperable filter
+// x = [1,2,4,2,1]
+// y = [1,2,4,2,1]
+
+void fivexfive_seperableblurfilter(cv::Mat& img, cv::Mat& dst)
+{
+    int filterH[5] = { 1, 2, 4, 2, 1 };
+    //int filterV = [1, 2, 4, 2, 1];
+    for (int i = 2; i < img.rows - 2; i++)
+    {
+        for (int j = 2; j < img.cols - 2; j++)
+        {
+            for (int H = 0; H < 5; H++)
+            {
+                dst.at<cv::Vec3b>(i, j) *= filterH[H];
+            }
+        }
+    }
 }
 //=================================================================================================================================
 //=================================================================================================================================
@@ -153,7 +232,11 @@ int main()
         }
     if (cv::waitKey(0) == 's')
         {
-        sepia_filter(img, dst);
+            sepia_filter(img, dst);
+        }
+    if (cv::waitKey(0) == 'p')
+        {
+            fivexfive_blurfilter(img, dst);
         }
 
    
